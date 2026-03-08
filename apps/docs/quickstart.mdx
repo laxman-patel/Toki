@@ -1,0 +1,77 @@
+# Quickstart
+
+This quickstart uses the first supported happy path: an HTTP tool invoked through a scoped lease.
+
+## 1. Start the API
+
+```bash
+cd apps/api
+bun run dev
+```
+
+## 2. Configure the CLI
+
+```bash
+cd apps/cli
+bun run src/index.ts login --api-url http://localhost:3000
+```
+
+## 3. Create an agent
+
+```bash
+bun run src/index.ts agent create --name reviewer-bot
+```
+
+## 4. Add a tool
+
+```bash
+bun run src/index.ts tool add \
+  --name webhook \
+  --kind http \
+  --target-url https://httpbin.org/post
+```
+
+## 5. Apply a policy
+
+Use the returned agent ID and tool ID:
+
+```bash
+bun run src/index.ts policy apply \
+  --subject-type agent \
+  --subject-id <agent-id> \
+  --tool-id <tool-id> \
+  --action send \
+  --resource webhook \
+  --environment dev \
+  --max-ttl 15m
+```
+
+## 6. Issue a lease
+
+```bash
+bun run src/index.ts lease issue \
+  --agent-id <agent-id> \
+  --tool-id <tool-id> \
+  --action send \
+  --resource webhook \
+  --environment dev \
+  --ttl 5m
+```
+
+## 7. Invoke the tool
+
+```bash
+bun run src/index.ts invoke \
+  --lease-id <lease-id> \
+  --tool-id <tool-id> \
+  --action send \
+  --resource webhook \
+  --environment dev \
+  --payload '{"message":"hello from toki"}'
+```
+
+## 8. View audit events
+
+```bash
+bun run src/index.ts logs tail --limit 20
+```

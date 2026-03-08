@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@toki/core": [
+        "packages/core/src/index.ts"
+      ],
+      "@toki/core/*": [
+        "packages/core/src/*"
+      ],
+      "@toki/policy-engine": [
+        "packages/policy-engine/src/index.ts"
+      ],
+      "@toki/policy-engine/*": [
+        "packages/policy-engine/src/*"
+      ],
+      "@toki/db": [
+        "packages/db/src/index.ts"
+      ],
+      "@toki/db/*": [
+        "packages/db/src/*"
+      ],
+      "@toki/sdk-node": [
+        "packages/sdk-node/src/index.ts"
+      ],
+      "@toki/sdk-node/*": [
+        "packages/sdk-node/src/*"
+      ]
+    }
+  }
+}

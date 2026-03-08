@@ -1,0 +1,13 @@
+{
+  "name": "@toki/docs",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "mintlify dev",
+    "typecheck": "node -e \"process.exit(0)\""
+  },
+  "devDependencies": {
+    "mintlify": "latest"
+  }
+}

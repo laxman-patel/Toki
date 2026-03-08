@@ -1,0 +1,19 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Toki",
+  "theme": "mint",
+  "colors": {
+    "primary": "#0f766e",
+    "light": "#14b8a6",
+    "dark": "#99f6e4"
+  },
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "index",
+        "quickstart"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "toki",
+  "private": true,
+  "packageManager": "bun@1.3.6",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "cd apps/api && bun run dev",
+    "dev:cli": "cd apps/cli && bun run dev",
+    "dev:docs": "cd apps/docs && npm run dev",
+    "typecheck": "cd packages/core && bun run typecheck && cd ../policy-engine && bun run typecheck && cd ../db && bun run typecheck && cd ../sdk-node && bun run typecheck && cd ../../apps/api && bun run typecheck && cd ../cli && bun run typecheck"
+  },
+  "devDependencies": {
+    "typescript": "latest"
+  }
+}
