@@ -1,10 +1,11 @@
-export const toolServiceFactory = (
-  toolDal: ReturnType<typeof import("./tool-dal").toolDalFactory>,
-  auditService: ReturnType<typeof import("../audit/audit-service").auditServiceFactory>
-) => ({
-  create(input: import("@toki/core").CreateToolInput) {
-    const tool = toolDal.create(input);
-    auditService.create({
+import type { AppContext } from "../../lib/app-context";
+import { auditService } from "../audit/audit-service";
+import { toolDal } from "./tool-dal";
+
+export const toolService = {
+  create(context: AppContext, input: import("@toki/core").CreateToolInput) {
+    const tool = toolDal.create(context, input);
+    auditService.create(context, {
       actorType: "user",
       actorId: "control-plane-user",
       eventType: "tool.created",
@@ -12,7 +13,7 @@ export const toolServiceFactory = (
     });
     return tool;
   },
-  findById(id: string) {
-    return toolDal.findById(id);
+  findById(context: AppContext, id: string) {
+    return toolDal.findById(context, id);
   }
-});
+};

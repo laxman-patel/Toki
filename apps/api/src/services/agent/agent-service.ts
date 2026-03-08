@@ -1,10 +1,11 @@
-export const agentServiceFactory = (
-  agentDal: ReturnType<typeof import("./agent-dal").agentDalFactory>,
-  auditService: ReturnType<typeof import("../audit/audit-service").auditServiceFactory>
-) => ({
-  create(input: import("./agent-types").CreateAgentServiceInput) {
-    const agent = agentDal.create(input);
-    auditService.create({
+import type { AppContext } from "../../lib/app-context";
+import { auditService } from "../audit/audit-service";
+import { agentDal } from "./agent-dal";
+
+export const agentService = {
+  create(context: AppContext, input: import("./agent-types").CreateAgentServiceInput) {
+    const agent = agentDal.create(context, input);
+    auditService.create(context, {
       actorType: "user",
       actorId: "control-plane-user",
       eventType: "agent.created",
@@ -12,7 +13,7 @@ export const agentServiceFactory = (
     });
     return agent;
   },
-  findById(id: string) {
-    return agentDal.findById(id);
+  findById(context: AppContext, id: string) {
+    return agentDal.findById(context, id);
   }
-});
+};

@@ -1,14 +1,14 @@
 import type { Invocation } from "@toki/core";
 
-import type { AppStore } from "../../lib/store";
+import type { AppContext } from "../../lib/app-context";
 
-export const invocationDalFactory = (store: AppStore) => ({
-  create(input: Omit<Invocation, "id">): Invocation {
+export const invocationDal = {
+  create(context: AppContext, input: Omit<Invocation, "id">): Invocation {
     const invocation: Invocation = {
       id: crypto.randomUUID(),
       ...input
     };
-    store.invocations.set(invocation.id, invocation);
+    context.store.invocations.set(invocation.id, invocation);
     return invocation;
   }
-});
+};

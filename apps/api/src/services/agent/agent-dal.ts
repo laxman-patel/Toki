@@ -1,20 +1,20 @@
 import type { Agent } from "@toki/core";
 
-import type { AppStore } from "../../lib/store";
+import type { AppContext } from "../../lib/app-context";
 import type { CreateAgentServiceInput } from "./agent-types";
 
-export const agentDalFactory = (store: AppStore) => ({
-  create(input: CreateAgentServiceInput): Agent {
+export const agentDal = {
+  create(context: AppContext, input: CreateAgentServiceInput): Agent {
     const agent: Agent = {
       id: crypto.randomUUID(),
       name: input.name,
       description: input.description,
       createdAt: new Date().toISOString()
     };
-    store.agents.set(agent.id, agent);
+    context.store.agents.set(agent.id, agent);
     return agent;
   },
-  findById(id: string) {
-    return store.agents.get(id);
+  findById(context: AppContext, id: string) {
+    return context.store.agents.get(id);
   }
-});
+};

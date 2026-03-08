@@ -1,9 +1,9 @@
 import type { Workflow } from "@toki/core";
 
-import type { AppStore } from "../../lib/store";
+import type { AppContext } from "../../lib/app-context";
 
-export const workflowDalFactory = (store: AppStore) => ({
-  create(input: import("@toki/core").CreateWorkflowInput): Workflow {
+export const workflowDal = {
+  create(context: AppContext, input: import("@toki/core").CreateWorkflowInput): Workflow {
     const workflow: Workflow = {
       id: crypto.randomUUID(),
       agentId: input.agentId,
@@ -11,10 +11,10 @@ export const workflowDalFactory = (store: AppStore) => ({
       description: input.description,
       createdAt: new Date().toISOString()
     };
-    store.workflows.set(workflow.id, workflow);
+    context.store.workflows.set(workflow.id, workflow);
     return workflow;
   },
-  findById(id: string) {
-    return store.workflows.get(id);
+  findById(context: AppContext, id: string) {
+    return context.store.workflows.get(id);
   }
-});
+};

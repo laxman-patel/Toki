@@ -1,4 +1,4 @@
-export const authServiceFactory = () => ({
+export const authService = {
   getControlPlaneActor() {
     return {
       actorType: "user" as const,
@@ -11,4 +11,4 @@ export const authServiceFactory = () => ({
       mode: "scaffold"
     };
   }
-});
+};

@@ -1,28 +1,29 @@
 import { evaluatePolicies } from "@toki/policy-engine";
 
-export const leaseServiceFactory = (
-  leaseDal: ReturnType<typeof import("./lease-dal").leaseDalFactory>,
-  policyService: ReturnType<typeof import("../policy/policy-service").policyServiceFactory>,
-  agentService: ReturnType<typeof import("../agent/agent-service").agentServiceFactory>,
-  workflowService: ReturnType<typeof import("../workflow/workflow-service").workflowServiceFactory>,
-  toolService: ReturnType<typeof import("../tool/tool-service").toolServiceFactory>,
-  auditService: ReturnType<typeof import("../audit/audit-service").auditServiceFactory>
-) => ({
-  create(input: import("@toki/core").CreateLeaseInput) {
-    if (!agentService.findById(input.agentId)) {
+import type { AppContext } from "../../lib/app-context";
+import { agentService } from "../agent/agent-service";
+import { auditService } from "../audit/audit-service";
+import { toolService } from "../tool/tool-service";
+import { workflowService } from "../workflow/workflow-service";
+import { policyService } from "../policy/policy-service";
+import { leaseDal } from "./lease-dal";
+
+export const leaseService = {
+  create(context: AppContext, input: import("@toki/core").CreateLeaseInput) {
+    if (!agentService.findById(context, input.agentId)) {
       throw new Error(`Agent ${input.agentId} does not exist.`);
     }
 
-    if (input.workflowId && !workflowService.findById(input.workflowId)) {
+    if (input.workflowId && !workflowService.findById(context, input.workflowId)) {
       throw new Error(`Workflow ${input.workflowId} does not exist.`);
     }
 
-    if (!toolService.findById(input.toolId)) {
+    if (!toolService.findById(context, input.toolId)) {
       throw new Error(`Tool ${input.toolId} does not exist.`);
     }
 
     const decision = evaluatePolicies({
-      policies: policyService.list(),
+      policies: policyService.list(context),
       agentId: input.agentId,
       workflowId: input.workflowId,
       toolId: input.toolId,
@@ -33,7 +34,7 @@ export const leaseServiceFactory = (
     });
 
     if (!decision.allowed) {
-      auditService.create({
+      auditService.create(context, {
         actorType: "agent",
         actorId: input.agentId,
         eventType: "lease.denied",
@@ -44,7 +45,7 @@ export const leaseServiceFactory = (
 
     const issuedAt = new Date();
     const expiresAt = new Date(issuedAt.getTime() + decision.effectiveTtlMs);
-    const lease = leaseDal.create({
+    const lease = leaseDal.create(context, {
       policyId: decision.policy.id,
       agentId: input.agentId,
       workflowId: input.workflowId,
@@ -57,7 +58,7 @@ export const leaseServiceFactory = (
       expiresAt: expiresAt.toISOString()
     });
 
-    auditService.create({
+    auditService.create(context, {
       actorType: "agent",
       actorId: input.agentId,
       eventType: "lease.issued",
@@ -66,22 +67,22 @@ export const leaseServiceFactory = (
 
     return lease;
   },
-  findById(id: string) {
-    return leaseDal.findById(id);
+  findById(context: AppContext, id: string) {
+    return leaseDal.findById(context, id);
   },
-  revoke(id: string) {
-    const lease = leaseDal.findById(id);
+  revoke(context: AppContext, id: string) {
+    const lease = leaseDal.findById(context, id);
     if (!lease) {
       throw new Error(`Lease ${id} does not exist.`);
     }
 
-    const revoked = leaseDal.update({
+    const revoked = leaseDal.update(context, {
       ...lease,
       status: "revoked",
       revokedAt: new Date().toISOString()
     });
 
-    auditService.create({
+    auditService.create(context, {
       actorType: "user",
       actorId: "control-plane-user",
       eventType: "lease.revoked",
@@ -90,4 +91,4 @@ export const leaseServiceFactory = (
 
     return revoked;
   }
-});
+};

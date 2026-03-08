@@ -1,16 +1,17 @@
-export const workflowServiceFactory = (
-  workflowDal: ReturnType<typeof import("./workflow-dal").workflowDalFactory>,
-  agentService: ReturnType<typeof import("../agent/agent-service").agentServiceFactory>,
-  auditService: ReturnType<typeof import("../audit/audit-service").auditServiceFactory>
-) => ({
-  create(input: import("@toki/core").CreateWorkflowInput) {
-    const agent = agentService.findById(input.agentId);
+import type { AppContext } from "../../lib/app-context";
+import { agentService } from "../agent/agent-service";
+import { auditService } from "../audit/audit-service";
+import { workflowDal } from "./workflow-dal";
+
+export const workflowService = {
+  create(context: AppContext, input: import("@toki/core").CreateWorkflowInput) {
+    const agent = agentService.findById(context, input.agentId);
     if (!agent) {
       throw new Error(`Agent ${input.agentId} does not exist.`);
     }
 
-    const workflow = workflowDal.create(input);
-    auditService.create({
+    const workflow = workflowDal.create(context, input);
+    auditService.create(context, {
       actorType: "user",
       actorId: "control-plane-user",
       eventType: "workflow.created",
@@ -18,7 +19,7 @@ export const workflowServiceFactory = (
     });
     return workflow;
   },
-  findById(id: string) {
-    return workflowDal.findById(id);
+  findById(context: AppContext, id: string) {
+    return workflowDal.findById(context, id);
   }
-});
+};

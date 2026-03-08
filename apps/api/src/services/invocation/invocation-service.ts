@@ -1,11 +1,12 @@
-export const invocationServiceFactory = (
-  invocationDal: ReturnType<typeof import("./invocation-dal").invocationDalFactory>,
-  leaseService: ReturnType<typeof import("../lease/lease-service").leaseServiceFactory>,
-  toolService: ReturnType<typeof import("../tool/tool-service").toolServiceFactory>,
-  auditService: ReturnType<typeof import("../audit/audit-service").auditServiceFactory>
-) => ({
-  async invoke(input: import("@toki/core").CreateInvocationInput) {
-    const lease = leaseService.findById(input.leaseId);
+import type { AppContext } from "../../lib/app-context";
+import { auditService } from "../audit/audit-service";
+import { leaseService } from "../lease/lease-service";
+import { toolService } from "../tool/tool-service";
+import { invocationDal } from "./invocation-dal";
+
+export const invocationService = {
+  async invoke(context: AppContext, input: import("@toki/core").CreateInvocationInput) {
+    const lease = leaseService.findById(context, input.leaseId);
     if (!lease) {
       throw new Error(`Lease ${input.leaseId} does not exist.`);
     }
@@ -27,7 +28,7 @@ export const invocationServiceFactory = (
       throw new Error("Invocation is outside the lease scope.");
     }
 
-    const tool = toolService.findById(input.toolId);
+    const tool = toolService.findById(context, input.toolId);
     if (!tool) {
       throw new Error(`Tool ${input.toolId} does not exist.`);
     }
@@ -56,7 +57,7 @@ export const invocationServiceFactory = (
       };
     }
 
-    const invocation = invocationDal.create({
+    const invocation = invocationDal.create(context, {
       leaseId: lease.id,
       agentId: lease.agentId,
       workflowId: lease.workflowId,
@@ -69,7 +70,7 @@ export const invocationServiceFactory = (
       createdAt: new Date().toISOString()
     });
 
-    auditService.create({
+    auditService.create(context, {
       actorType: "agent",
       actorId: lease.agentId,
       eventType: "invocation.created",
@@ -87,4 +88,4 @@ export const invocationServiceFactory = (
       body
     };
   }
-});
+};

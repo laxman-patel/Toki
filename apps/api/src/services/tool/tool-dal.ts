@@ -1,9 +1,9 @@
 import type { ToolDescriptor } from "@toki/core";
 
-import type { AppStore } from "../../lib/store";
+import type { AppContext } from "../../lib/app-context";
 
-export const toolDalFactory = (store: AppStore) => ({
-  create(input: import("@toki/core").CreateToolInput): ToolDescriptor {
+export const toolDal = {
+  create(context: AppContext, input: import("@toki/core").CreateToolInput): ToolDescriptor {
     const tool: ToolDescriptor = {
       id: crypto.randomUUID(),
       name: input.name,
@@ -11,10 +11,10 @@ export const toolDalFactory = (store: AppStore) => ({
       targetUrl: input.targetUrl,
       createdAt: new Date().toISOString()
     };
-    store.tools.set(tool.id, tool);
+    context.store.tools.set(tool.id, tool);
     return tool;
   },
-  findById(id: string) {
-    return store.tools.get(id);
+  findById(context: AppContext, id: string) {
+    return context.store.tools.get(id);
   }
-});
+};

@@ -1,18 +1,18 @@
 import type { PolicyRule } from "@toki/core";
 
-import type { AppStore } from "../../lib/store";
+import type { AppContext } from "../../lib/app-context";
 
-export const policyDalFactory = (store: AppStore) => ({
-  create(input: import("@toki/core").CreatePolicyInput): PolicyRule {
+export const policyDal = {
+  create(context: AppContext, input: import("@toki/core").CreatePolicyInput): PolicyRule {
     const policy: PolicyRule = {
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
       ...input
     };
-    store.policies.set(policy.id, policy);
+    context.store.policies.set(policy.id, policy);
     return policy;
   },
-  list() {
-    return Array.from(store.policies.values());
+  list(context: AppContext) {
+    return Array.from(context.store.policies.values());
   }
-});
+};
