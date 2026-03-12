@@ -1,5 +1,0 @@
-[install]
-exact = false
-
-[run]
-bun = true

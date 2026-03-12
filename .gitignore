@@ -1,8 +1,0 @@
-infisical/
-node_modules/
-.turbo/
-dist/
-coverage/
-.env
-.env.local
-.DS_Store
