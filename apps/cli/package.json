@@ -1,0 +1,15 @@
+{
+  "name": "@toki/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "toki": "./src/index.ts"
+  },
+  "scripts": {
+    "dev": "bun run src/index.ts"
+  },
+  "dependencies": {
+    "commander": "latest"
+  }
+}

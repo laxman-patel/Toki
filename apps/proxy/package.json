@@ -1,0 +1,16 @@
+{
+  "name": "@toki/proxy",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --watch src/server.ts",
+    "start": "bun run src/server.ts"
+  },
+  "dependencies": {
+    "@toki/crypto": "workspace:*",
+    "@toki/db": "workspace:*",
+    "@toki/shared": "workspace:*",
+    "nanoid": "latest"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "toki",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "db:generate": "bun run --filter @toki/db generate",
+    "db:push": "bun run --filter @toki/db push"
+  }
+}
