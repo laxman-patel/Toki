@@ -7,8 +7,8 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "generate": "drizzle-kit generate",
-    "push": "drizzle-kit push"
+    "generate": "bun --env-file=../../.env drizzle-kit generate",
+    "push": "bun --env-file=../../.env drizzle-kit push"
   },
   "dependencies": {
     "@neondatabase/serverless": "latest",
