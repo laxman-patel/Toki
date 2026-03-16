@@ -6,6 +6,7 @@ import { secretCmd } from "./commands/secret.js";
 import { proxyCmd } from "./commands/proxy.js";
 import { auditCmd } from "./commands/audit.js";
 import { configCmd } from "./commands/config.js";
+import { fetchCmd } from "./commands/fetch.js";
 
 const program = new Command()
   .name("toki")
@@ -19,5 +20,6 @@ program.addCommand(secretCmd);
 program.addCommand(proxyCmd);
 program.addCommand(auditCmd);
 program.addCommand(configCmd);
+program.addCommand(fetchCmd);
 
 program.parse();

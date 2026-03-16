@@ -1,0 +1,26 @@
+---
+const links = [
+  { href: "https://github.com/laxman-patel/Toki", label: "GitHub" },
+  { href: "#features", label: "Features" },
+  { href: "#how-it-works", label: "How it works" },
+  { href: "#get-started", label: "Get started" },
+];
+---
+
+<nav class="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg)]/80 backdrop-blur-sm">
+  <div class="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
+    <a href="/" class="text-lg font-semibold tracking-tight">toki</a>
+    <div class="flex items-center gap-6">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class="text-sm text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)]"
+          target={link.href.startsWith("http") ? "_blank" : undefined}
+          rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,48 @@
+---
+---
+
+<section class="mx-auto max-w-5xl px-6 pt-24 pb-20">
+  <div class="max-w-2xl">
+    <p class="mb-4 text-sm font-medium text-[var(--color-text-muted)]">Open source</p>
+    <h1 class="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+      Credential security<br />for AI agents.
+    </h1>
+    <p class="mt-6 text-lg leading-relaxed text-[var(--color-text-muted)]">
+      Zero-knowledge proxy that injects credentials at the network boundary.
+      Your agents never see, store, or transmit raw secrets.
+    </p>
+    <div class="mt-8 flex items-center gap-4">
+      <a
+        href="#get-started"
+        class="inline-flex h-10 items-center rounded-lg bg-[var(--color-accent)] px-5 text-sm font-medium text-white transition-opacity hover:opacity-80"
+      >
+        Get started
+      </a>
+      <a
+        href="https://github.com/laxman-patel/Toki"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex h-10 items-center rounded-lg border border-[var(--color-border)] px-5 text-sm font-medium transition-colors hover:bg-[var(--color-bg-alt)]"
+      >
+        GitHub
+      </a>
+    </div>
+  </div>
+
+  <div class="mt-16 rounded-xl border border-[var(--color-border)] bg-[#1c1917] p-5 font-mono text-sm shadow-sm">
+    <div class="mb-3 flex items-center gap-2">
+      <span class="h-3 w-3 rounded-full bg-[#ef4444]/60"></span>
+      <span class="h-3 w-3 rounded-full bg-[#eab308]/60"></span>
+      <span class="h-3 w-3 rounded-full bg-[#22c55e]/60"></span>
+      <span class="ml-2 text-xs text-[#a8a29e]">terminal</span>
+    </div>
+    <div class="space-y-1 text-[#e7e5e4]">
+      <p><span class="text-[#a8a29e]">$</span> bun add @toki/sdk</p>
+      <p class="text-[#a8a29e]"># agent code — credentials injected transparently</p>
+      <p><span class="text-[#86efac]">import</span> {'{'} createTokiProxy {'}'} <span class="text-[#86efac]">from</span> <span class="text-[#fde68a]">"@toki/sdk"</span></p>
+      <p><span class="text-[#86efac]">const</span> fetch = <span class="text-[#93c5fd]">createTokiProxy</span>({'{'} token: <span class="text-[#fde68a]">"tok_abc"</span> {'}'})</p>
+      <p><span class="text-[#86efac]">await</span> <span class="text-[#93c5fd]">fetch</span>(<span class="text-[#fde68a]">"https://api.anthropic.com/v1/messages"</span>, {'{ ... }'})</p>
+      <p class="text-[#a8a29e]"># ↑ real API key injected by proxy, agent never sees it</p>
+    </div>
+  </div>
+</section>

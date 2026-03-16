@@ -1,0 +1,43 @@
+---
+const features = [
+  {
+    title: "Zero-knowledge proxy",
+    desc: "Credentials never enter the agent runtime, LLM context, or logs. Injected at the network boundary only.",
+  },
+  {
+    title: "Host & path matching",
+    desc: "Secrets are scoped to specific hosts and paths. A Stripe key only works for api.stripe.com.",
+  },
+  {
+    title: "AES-256-GCM encryption",
+    desc: "Secrets encrypted at rest. Decrypted in proxy memory only at request time.",
+  },
+  {
+    title: "Agent registry",
+    desc: "Issue scoped tok_ tokens per agent. Revoke anytime. Each agent gets only the access it needs.",
+  },
+  {
+    title: "Full audit trail",
+    desc: "Every credential access logged — which agent, which service, which path, when.",
+  },
+  {
+    title: "Works everywhere",
+    desc: "TypeScript SDK, CLI, and MCP server. Same proxy, same injection, same audit.",
+  },
+];
+---
+
+<section id="features" class="border-t border-[var(--color-border)] bg-[var(--color-bg-alt)]">
+  <div class="mx-auto max-w-5xl px-6 py-20">
+    <p class="mb-2 text-sm font-medium text-[var(--color-text-muted)]">Features</p>
+    <h2 class="text-2xl font-bold tracking-tight sm:text-3xl">Everything you need.</h2>
+    <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {features.map((f) => (
+        <div>
+          <h3 class="font-semibold">{f.title}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-[var(--color-text-muted)]">{f.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
