@@ -1,48 +1,48 @@
 ---
 ---
 
-<section class="mx-auto max-w-5xl px-6 pt-24 pb-20">
+<section class="mx-auto max-w-5xl px-6 pt-28 pb-24">
   <div class="max-w-2xl">
-    <p class="mb-4 text-sm font-medium text-[var(--color-text-muted)]">Open source</p>
-    <h1 class="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-      Credential security<br />for AI agents.
+    <p class="mb-4 text-xs text-[var(--color-text-muted)]">// open source</p>
+    <h1 class="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
+      credential security<br />for AI agents.
     </h1>
-    <p class="mt-6 text-lg leading-relaxed text-[var(--color-text-muted)]">
-      Zero-knowledge proxy that injects credentials at the network boundary.
-      Your agents never see, store, or transmit raw secrets.
+    <p class="mt-6 text-sm leading-relaxed text-[var(--color-text-muted)]">
+      zero-knowledge proxy that injects credentials at the network boundary.
+      agents never see, store, or transmit raw secrets.
     </p>
-    <div class="mt-8 flex items-center gap-4">
+    <div class="mt-8 flex items-center gap-3">
       <a
         href="#get-started"
-        class="inline-flex h-10 items-center rounded-lg bg-[var(--color-accent)] px-5 text-sm font-medium text-white transition-opacity hover:opacity-80"
+        class="inline-flex h-9 items-center border border-[var(--color-text)] bg-[var(--color-text)] px-4 text-xs font-medium text-[var(--color-bg)] transition-opacity hover:opacity-80"
       >
-        Get started
+        get started
       </a>
       <a
         href="https://github.com/laxman-patel/Toki"
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-flex h-10 items-center rounded-lg border border-[var(--color-border)] px-5 text-sm font-medium transition-colors hover:bg-[var(--color-bg-alt)]"
+        class="inline-flex h-9 items-center border border-[var(--color-border)] px-4 text-xs font-medium transition-colors hover:border-[var(--color-text-muted)]"
       >
-        GitHub
+        github
       </a>
     </div>
   </div>
 
-  <div class="mt-16 rounded-xl border border-[var(--color-border)] bg-[#1c1917] p-5 font-mono text-sm shadow-sm">
-    <div class="mb-3 flex items-center gap-2">
-      <span class="h-3 w-3 rounded-full bg-[#ef4444]/60"></span>
-      <span class="h-3 w-3 rounded-full bg-[#eab308]/60"></span>
-      <span class="h-3 w-3 rounded-full bg-[#22c55e]/60"></span>
-      <span class="ml-2 text-xs text-[#a8a29e]">terminal</span>
+  <div class="mt-16 border border-[var(--color-border)] bg-[var(--color-surface)] p-5 text-xs">
+    <div class="mb-3 flex items-center gap-3">
+      <span class="h-2 w-2 bg-[#ef4444]/60"></span>
+      <span class="h-2 w-2 bg-[#eab308]/60"></span>
+      <span class="h-2 w-2 bg-[#22c55e]/60"></span>
+      <span class="ml-1 text-[var(--color-text-muted)]">~/agent</span>
     </div>
-    <div class="space-y-1 text-[#e7e5e4]">
-      <p><span class="text-[#a8a29e]">$</span> bun add @toki/sdk</p>
-      <p class="text-[#a8a29e]"># agent code — credentials injected transparently</p>
+    <div class="space-y-0.5 text-[var(--color-text)]">
+      <p><span class="text-[var(--color-text-muted)]">$</span> bun add @toki/sdk</p>
+      <p class="text-[var(--color-text-muted)]"># credentials injected transparently</p>
       <p><span class="text-[#86efac]">import</span> {'{'} createTokiProxy {'}'} <span class="text-[#86efac]">from</span> <span class="text-[#fde68a]">"@toki/sdk"</span></p>
       <p><span class="text-[#86efac]">const</span> fetch = <span class="text-[#93c5fd]">createTokiProxy</span>({'{'} token: <span class="text-[#fde68a]">"tok_abc"</span> {'}'})</p>
       <p><span class="text-[#86efac]">await</span> <span class="text-[#93c5fd]">fetch</span>(<span class="text-[#fde68a]">"https://api.anthropic.com/v1/messages"</span>, {'{ ... }'})</p>
-      <p class="text-[#a8a29e]"># ↑ real API key injected by proxy, agent never sees it</p>
+      <p class="text-[var(--color-text-muted)]"># ^ real API key injected by proxy, agent never sees it</p>
     </div>
   </div>
 </section>

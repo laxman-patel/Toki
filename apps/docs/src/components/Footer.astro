@@ -1,20 +1,20 @@
 ---
 const links = [
-  { href: "https://github.com/laxman-patel/Toki", label: "GitHub" },
-  { href: "https://github.com/laxman-patel/Toki/issues", label: "Issues" },
+  { href: "https://github.com/laxman-patel/Toki", label: "github" },
+  { href: "https://github.com/laxman-patel/Toki/issues", label: "issues" },
 ];
 ---
 
 <footer class="border-t border-[var(--color-border)]">
-  <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
-    <p class="text-sm text-[var(--color-text-muted)]">toki</p>
-    <div class="flex items-center gap-5">
+  <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
+    <p class="text-xs text-[var(--color-text-muted)]">toki</p>
+    <div class="flex items-center gap-4">
       {links.map((link) => (
         <a
           href={link.href}
           target="_blank"
           rel="noopener noreferrer"
-          class="text-sm text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)]"
+          class="text-xs text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)]"
         >
           {link.label}
         </a>

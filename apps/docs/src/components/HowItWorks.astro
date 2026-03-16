@@ -1,58 +1,55 @@
 ---
 const steps = [
   {
-    num: "1",
-    title: "Store secrets",
-    desc: "Human or trusted agent stores API keys via the dashboard, CLI, or MCP. Values are AES-256-GCM encrypted at rest.",
+    num: "01",
+    title: "store secrets",
+    desc: "human or trusted agent stores API keys via dashboard, CLI, or MCP. AES-256-GCM encrypted at rest.",
   },
   {
-    num: "2",
-    title: "Issue agent tokens",
-    desc: "Create agents and get scoped tok_ tokens. Agents authenticate with these — never with real credentials.",
+    num: "02",
+    title: "issue agent tokens",
+    desc: "create agents, get scoped tok_ tokens. agents authenticate with these — never with real credentials.",
   },
   {
-    num: "3",
-    title: "Agent makes API calls",
-    desc: "Using the SDK, CLI, or MCP, the agent calls APIs normally. Requests are routed through the Toki proxy.",
+    num: "03",
+    title: "agent makes API calls",
+    desc: "using SDK, CLI, or MCP, the agent calls APIs normally. requests route through the toki proxy.",
   },
   {
-    num: "4",
-    title: "Proxy injects credentials",
-    desc: "The proxy matches the target host, decrypts the secret, injects the real header, forwards upstream. Agent never sees it.",
+    num: "04",
+    title: "proxy injects credentials",
+    desc: "proxy matches target host, decrypts secret, injects real header, forwards upstream. agent never sees it.",
   },
 ];
 ---
 
-<section id="how-it-works" class="border-t border-[var(--color-border)]">
+<section id="how-it-works" class="border-t border-[var(--color-border)] bg-[var(--color-bg-alt)]">
   <div class="mx-auto max-w-5xl px-6 py-20">
-    <p class="mb-2 text-sm font-medium text-[var(--color-text-muted)]">How it works</p>
-    <h2 class="text-2xl font-bold tracking-tight sm:text-3xl">Four steps. Zero exposure.</h2>
+    <p class="mb-2 text-xs text-[var(--color-text-muted)]">// how it works</p>
+    <h2 class="text-xl font-bold tracking-tight sm:text-2xl">four steps. zero exposure.</h2>
 
-    <div class="mt-12 grid gap-6 sm:grid-cols-2">
+    <div class="mt-12 grid gap-px bg-[var(--color-border)] sm:grid-cols-2">
       {steps.map((s) => (
-        <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
-          <span class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-[var(--color-accent)] text-xs font-semibold text-white">
-            {s.num}
-          </span>
-          <h3 class="mt-3 font-semibold">{s.title}</h3>
-          <p class="mt-2 text-sm leading-relaxed text-[var(--color-text-muted)]">{s.desc}</p>
+        <div class="bg-[var(--color-bg-alt)] p-6">
+          <span class="text-xs text-[var(--color-text-muted)]">{s.num}</span>
+          <h3 class="mt-2 text-sm font-semibold">{s.title}</h3>
+          <p class="mt-2 text-xs leading-relaxed text-[var(--color-text-muted)]">{s.desc}</p>
         </div>
       ))}
     </div>
 
-    <div class="mt-12 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
-      <p class="mb-4 text-sm font-medium text-[var(--color-text-muted)]">Architecture</p>
-      <div class="font-mono text-sm leading-relaxed text-[var(--color-text-muted)]">
-        <p>Agent (SDK/CLI/MCP)</p>
-        <p class="ml-2">|</p>
-        <p class="ml-2">| fetch("https://api.anthropic.com/v1/messages")</p>
-        <p class="ml-2">| rewrites to → http://localhost:4080/proxy/api.anthropic.com/v1/messages</p>
-        <p class="ml-2">| adds Proxy-Authorization: Basic(x:tok_xxx)</p>
-        <p class="ml-2">↓</p>
-        <p><span class="text-[var(--color-text)] font-semibold">Toki Proxy</span> (:4080)</p>
-        <p class="ml-2">→ token lookup → user → secrets (host match) → decrypt → inject header</p>
-        <p class="ml-2">↓</p>
-        <p>Upstream API (with real credentials)</p>
+    <div class="mt-8 border border-[var(--color-border)] bg-[var(--color-surface)] p-6 text-xs">
+      <p class="mb-4 text-[var(--color-text-muted)]">// architecture</p>
+      <div class="leading-relaxed text-[var(--color-text-muted)]">
+        <p class="text-[var(--color-text)]">agent (SDK/CLI/MCP)</p>
+        <p>&nbsp; | fetch("https://api.anthropic.com/v1/messages")</p>
+        <p>&nbsp; | rewrites -&gt; http://localhost:4080/proxy/api.anthropic.com/v1/messages</p>
+        <p>&nbsp; | adds Proxy-Authorization: Basic(x:tok_xxx)</p>
+        <p>&nbsp; v</p>
+        <p class="text-[var(--color-text)]">toki proxy (:4080)</p>
+        <p>&nbsp; -&gt; token lookup -&gt; user -&gt; secrets (host match) -&gt; decrypt -&gt; inject header</p>
+        <p>&nbsp; v</p>
+        <p class="text-[var(--color-text)]">upstream API (with real credentials)</p>
       </div>
     </div>
   </div>

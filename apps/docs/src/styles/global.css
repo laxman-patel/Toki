@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
   --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
 
-  --color-bg: #fafaf9;
-  --color-bg-alt: #f1ecec;
-  --color-surface: #ffffff;
-  --color-border: #e5e2e0;
-  --color-text: #1c1917;
-  --color-text-muted: #78716c;
-  --color-accent: #1c1917;
+  --color-bg: #0a0a0a;
+  --color-bg-alt: #111111;
+  --color-surface: #161616;
+  --color-border: #262626;
+  --color-text: #e5e5e5;
+  --color-text-muted: #737373;
+  --color-accent: #e5e5e5;
 }
 
 html {
@@ -26,5 +26,5 @@ body {
 }
 
 ::selection {
-  background: #1c191720;
+  background: #e5e5e520;
 }

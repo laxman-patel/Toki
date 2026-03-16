@@ -1,43 +1,120 @@
 ---
-const features = [
+const categories = [
   {
-    title: "Zero-knowledge proxy",
-    desc: "Credentials never enter the agent runtime, LLM context, or logs. Injected at the network boundary only.",
+    id: "proxy",
+    label: "proxy",
+    title: "zero-knowledge injection",
+    desc: "credentials never touch the agent. proxy intercepts requests, matches host/path, injects real creds, forwards upstream.",
+    details: ["AES-256-GCM at rest", "host & path scoping", "streaming responses", "60s resolution cache"],
   },
   {
-    title: "Host & path matching",
-    desc: "Secrets are scoped to specific hosts and paths. A Stripe key only works for api.stripe.com.",
+    id: "identity",
+    label: "identity",
+    title: "agents as first-class citizens",
+    desc: "scoped tokens per agent. task-scoped credentials that auto-revoke. delegation chains with scope attenuation at each hop.",
+    details: ["tok_ access tokens", "task lifecycle binding", "cascading revocation", "heartbeat monitoring"],
   },
   {
-    title: "AES-256-GCM encryption",
-    desc: "Secrets encrypted at rest. Decrypted in proxy memory only at request time.",
+    id: "access",
+    label: "access",
+    title: "policies & approval gates",
+    desc: "declarative policy engine. human-in-the-loop for sensitive ops. anomaly detection auto-restricts on suspicious behavior.",
+    details: ["Cedar-inspired ABAC", "Slack/email approvals", "behavioral baselines", "canary credentials"],
   },
   {
-    title: "Agent registry",
-    desc: "Issue scoped tok_ tokens per agent. Revoke anytime. Each agent gets only the access it needs.",
+    id: "integrations",
+    label: "integrations",
+    title: "SDKs, MCP, OAuth",
+    desc: "one-line SDK integration. MCP gateway with tool-level scoping. OAuth broker handles token lifecycle for 100+ providers.",
+    details: ["TypeScript / Python / Go", "LangChain, CrewAI, AutoGen", "MCP rug pull detection", "DPoP token binding"],
   },
   {
-    title: "Full audit trail",
-    desc: "Every credential access logged — which agent, which service, which path, when.",
+    id: "observability",
+    label: "observability",
+    title: "audit everything",
+    desc: "every credential access logged with full context. real-time dashboard. tamper-proof storage. compliance-ready exports.",
+    details: ["reasoning chain capture", "OpenTelemetry export", "SOC 2 / GDPR / HIPAA", "queryable interface"],
   },
   {
-    title: "Works everywhere",
-    desc: "TypeScript SDK, CLI, and MCP server. Same proxy, same injection, same audit.",
+    id: "security",
+    label: "security",
+    title: "defense in depth",
+    desc: "credential-free LLM context. sandbox isolation. secret rotation with zero downtime. multi-vault backend support.",
+    details: ["prompt injection defense", "Wasm/container sandboxes", "dual-credential rotation", "Vault / AWS SM / GCP / Azure"],
   },
 ];
 ---
 
-<section id="features" class="border-t border-[var(--color-border)] bg-[var(--color-bg-alt)]">
+<section id="features" class="border-t border-[var(--color-border)]">
   <div class="mx-auto max-w-5xl px-6 py-20">
-    <p class="mb-2 text-sm font-medium text-[var(--color-text-muted)]">Features</p>
-    <h2 class="text-2xl font-bold tracking-tight sm:text-3xl">Everything you need.</h2>
-    <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {features.map((f) => (
-        <div>
-          <h3 class="font-semibold">{f.title}</h3>
-          <p class="mt-2 text-sm leading-relaxed text-[var(--color-text-muted)]">{f.desc}</p>
+    <p class="mb-2 text-xs text-[var(--color-text-muted)]">// features</p>
+    <h2 class="text-xl font-bold tracking-tight sm:text-2xl">agents get power. you keep control.</h2>
+
+    <!-- tab bar -->
+    <div class="mt-10 flex gap-px overflow-x-auto bg-[var(--color-border)]" id="feature-tabs">
+      {categories.map((c, i) => (
+        <button
+          data-tab={c.id}
+          class:list={[
+            "feature-tab px-4 py-2.5 text-[10px] transition-colors whitespace-nowrap",
+            i === 0 ? "bg-[var(--color-surface)] text-[var(--color-text)]" : "bg-[var(--color-bg)] text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
+          ]}
+        >
+          {c.label}
+        </button>
+      ))}
+    </div>
+
+    <!-- panels -->
+    <div id="feature-panels">
+      {categories.map((c, i) => (
+        <div
+          data-panel={c.id}
+          class:list={[
+            "feature-panel border border-t-0 border-[var(--color-border)] bg-[var(--color-surface)]",
+            i !== 0 && "hidden",
+          ]}
+        >
+          <div class="p-8 sm:flex sm:gap-12">
+            <div class="sm:flex-1">
+              <h3 class="text-sm font-bold">{c.title}</h3>
+              <p class="mt-3 text-xs leading-relaxed text-[var(--color-text-muted)]">{c.desc}</p>
+            </div>
+            <div class="mt-5 sm:mt-0 sm:w-48 sm:shrink-0">
+              <div class="space-y-2">
+                {c.details.map((d) => (
+                  <p class="text-[10px] text-[var(--color-text-muted)]">
+                    <span class="text-[var(--color-text)]">-</span> {d}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       ))}
     </div>
+
   </div>
 </section>
+
+<script>
+  const tabs = document.querySelectorAll<HTMLButtonElement>(".feature-tab");
+  const panels = document.querySelectorAll<HTMLDivElement>(".feature-panel");
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const id = tab.dataset.tab;
+
+      tabs.forEach((t) => {
+        t.classList.toggle("bg-[var(--color-surface)]", t.dataset.tab === id);
+        t.classList.toggle("text-[var(--color-text)]", t.dataset.tab === id);
+        t.classList.toggle("bg-[var(--color-bg)]", t.dataset.tab !== id);
+        t.classList.toggle("text-[var(--color-text-muted)]", t.dataset.tab !== id);
+      });
+
+      panels.forEach((p) => {
+        p.classList.toggle("hidden", p.dataset.panel !== id);
+      });
+    });
+  });
+</script>
