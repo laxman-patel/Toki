@@ -13,7 +13,7 @@ Agent (SDK/fetch) → Toki Proxy (:4080) → injects real creds → upstream API
                     audit logging
 ```
 
-Bun monorepo · Next.js 16 · better-auth · Drizzle ORM · Neon Postgres · shadcn/ui v4
+Bun monorepo · Next.js · better-auth · Drizzle ORM · Neon Postgres · shadcn/ui v4
 
 ## Structure
 
@@ -38,18 +38,35 @@ cp .env.example .env   # fill in DATABASE_URL, SECRET_ENCRYPTION_KEY, BETTER_AUT
 bun run db:push        # push schema to Neon
 
 # start services
-bun run --filter web dev       # dashboard on :3000
+bun run --filter web dev          # dashboard on :3000
 bun run --filter @toki/proxy dev  # proxy on :4080
 ```
 
 ## CLI
 
 ```bash
+# Auth
 bun run apps/cli/src/index.ts login --email x --password y
+bun run apps/cli/src/index.ts whoami
+
+# Agents
+bun run apps/cli/src/index.ts agent list
 bun run apps/cli/src/index.ts agent create my-agent --json
+bun run apps/cli/src/index.ts agent delete <id>
+
+# Secrets
+bun run apps/cli/src/index.ts secret list
 bun run apps/cli/src/index.ts secret create --name anthropic --type anthropic --value sk-ant-... --host api.anthropic.com
+bun run apps/cli/src/index.ts secret create --name openai --type generic --value sk-... --host api.openai.com --header authorization --format "Bearer {value}"
+bun run apps/cli/src/index.ts secret rotate <id> --value sk-ant-new...
+bun run apps/cli/src/index.ts secret delete <id>
+
+# Proxy + audit
 bun run apps/cli/src/index.ts proxy start
 bun run apps/cli/src/index.ts audit list --json
+
+# Make a proxied request directly
+bun run apps/cli/src/index.ts fetch https://api.anthropic.com/v1/models
 ```
 
 ## SDK
@@ -57,9 +74,15 @@ bun run apps/cli/src/index.ts audit list --json
 ```ts
 import { createTokiProxy } from "@toki/sdk";
 
+// token from arg or TOKI_TOKEN env var; proxyUrl defaults to http://localhost:4080
 const fetch = createTokiProxy({ token: "tok_xxx" });
-// creds injected transparently
-await fetch("https://api.anthropic.com/v1/messages", { ... });
+
+// credentials injected transparently at the proxy
+await fetch("https://api.anthropic.com/v1/messages", {
+  method: "POST",
+  headers: { "content-type": "application/json" },
+  body: JSON.stringify({ ... }),
+});
 ```
 
 ## MCP
@@ -69,7 +92,7 @@ Add to Claude config:
 { "mcpServers": { "toki": { "command": "bun", "args": ["run", "apps/mcp/src/index.ts"] } } }
 ```
 
-Tools: `toki_agent_list`, `toki_agent_create`, `toki_secret_list`, `toki_secret_create`, `toki_secret_delete`, `toki_audit_list`, `toki_proxy_status`
+Tools: `toki_agent_list`, `toki_agent_create`, `toki_secret_list`, `toki_secret_create`, `toki_secret_delete`, `toki_audit_list`, `toki_proxy_status`, `toki_fetch`
 
 ---
 
@@ -81,11 +104,11 @@ Tools: `toki_agent_list`, `toki_agent_create`, `toki_secret_list`, `toki_secret_
 |---|---------|--------|-------|
 | 01 | **Zero-Knowledge Credential Proxy** | ✅ MVP | SDK-mode forward proxy. URL rewriting, Proxy-Authorization auth, host/path matching, header injection, streaming response forwarding. No CONNECT/MITM yet. |
 | 03 | **Agent Identity Registry** | ✅ MVP | CRUD agents w/ `tok_` access tokens. Active/inactive status. Scoped to user. |
-| 05 | **Framework-Native SDKs** | ✅ MVP | TypeScript SDK only (`createTokiProxy` wrapped fetch). No Python/Go/framework plugins yet. |
-| 06 | **MCP Credential Gateway** | ✅ MVP | MCP server exposing 7 tools over STDIO. Manages agents, secrets, audit, proxy status. No STDIO interception or HTTP transport proxy yet. |
+| 05 | **Framework-Native SDKs** | ✅ MVP | TypeScript SDK only (`createTokiProxy` wrapped fetch, `TokiClient` URL rewriter). No Python/Go/framework plugins yet. |
+| 06 | **MCP Credential Gateway** | ✅ MVP | MCP server exposing 8 tools over STDIO. Manages agents, secrets, audit, proxy status, and proxied fetch. No STDIO interception or HTTP transport proxy yet. |
 | 11 | **Full Audit Trail** | ✅ MVP | Logs credential injections (agent, service, path, timestamp). No reasoning chain capture, tamper-proofing, or compliance exports yet. |
-| 13 | **Secret Rotation Engine** | ✅ Partial | Manual rotation via CLI (`toki secret rotate`) and API (`PATCH /api/secrets/:id`). No automated rotation, dual-credential strategy, or provider-specific rotators. |
-| 18 | **CLI & Local Dev Experience** | ✅ MVP | `toki` CLI: login, agent/secret CRUD, proxy start/status, audit list, config. JSON output mode. No pre-commit secret scanning, debug mode, or env profiles. |
+| 13 | **Secret Rotation Engine** | ✅ Partial | Manual rotation via CLI (`secret rotate`) and API (`PATCH /api/secrets/:id`). No automated rotation, dual-credential strategy, or provider-specific rotators. |
+| 18 | **CLI & Local Dev Experience** | ✅ MVP | `toki` CLI: login/whoami, agent/secret CRUD, secret rotate, proxy start/status, audit list, config, fetch. JSON output mode. No pre-commit secret scanning, debug mode, or env profiles. |
 | 19 | **Admin Console** | ✅ MVP | Next.js dashboard: auth (email+password), agent management, secret management, audit log viewer. No RBAC, team management, SSO, or multi-tenant. |
 
 ### Partially Implemented
@@ -94,8 +117,8 @@ Tools: `toki_agent_list`, `toki_agent_create`, `toki_secret_list`, `toki_secret_
 |--------|------------|----------------|
 | Encryption | AES-256-GCM at rest | No envelope encryption, no HSM/KMS integration, no CMEK |
 | Proxy | Forward proxy (URL rewrite) | CONNECT tunnel, MITM TLS, mTLS, request signing, mlock memory isolation |
-| Secret types | `anthropic` + `generic` (configurable header) | No per-provider handlers beyond anthropic |
-| Caching | In-memory Map w/ 60s TTL | No distributed cache, no invalidation on secret update |
+| Secret types | `anthropic` + `generic` (configurable header + format string) | No per-provider handlers beyond anthropic |
+| Caching | In-memory TTL cache (60s) | No distributed cache, no invalidation on secret update |
 | Auth | Email+password via better-auth | No API key auth for programmatic access |
 
 ### Not Implemented
